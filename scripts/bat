@@ -1,0 +1,45 @@
+#!/bin/sh 
+
+if ["$(acpi)" = ""]; then
+	echo ""
+else
+
+	# bat="$(acpi | awk 'NR==1{print $4}' | sed s/%,//)"
+
+	bat="$(cat /sys/class/power_supply/BAT0/capacity)"
+
+	# status="$(acpi | awk 'NR==1{print $3}' | sed s/,//)"
+
+	status="$(cat /sys/class/power_supply/BAT0/status)"
+
+	charge_status="Charging"
+
+	if [ $status = $charge_status ]; then
+		case 1 in
+			$((bat >= 95)) ) icon=" " ;;
+			$((bat >= 85)) ) icon=" " ;;
+			$((bat >= 75)) ) icon=" " ;;
+			$((bat >= 60)) ) icon=" " ;;
+			$((bat >= 40)) ) icon=" " ;;
+			$((bat >= 20)) ) icon=" " ;;
+			$((bat >= 0)) ) icon=" " ;;
+			* ) echo undefined&& exit ;;
+		esac
+	else
+		case 1 in
+			$((bat >= 90)) ) icon="" ;;
+			$((bat >= 80)) ) icon="" ;;
+			$((bat >= 70)) ) icon="" ;;
+			$((bat >= 60)) ) icon="" ;;
+			$((bat >= 50)) ) icon="" ;;
+			$((bat >= 40)) ) icon="" ;;
+			$((bat >= 30)) ) icon="" ;;
+			$((bat >= 20)) ) icon="" ;;
+			$((bat >= 10)) ) icon="" ;;
+			$((bat >= 0)) ) icon="" ;;
+			* ) echo undefined&& exit ;;
+		esac
+	fi
+  echo "$icon $bat%"
+fi
+
